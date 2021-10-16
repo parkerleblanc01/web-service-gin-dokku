@@ -1,7 +1,9 @@
 package main
 
 import (
-    "net/http"
+    "log"
+	"net/http"
+	"os"
 
     "github.com/gin-gonic/gin"
 )
@@ -20,12 +22,19 @@ var albums = []album{
 }
 
 func main() {
-    router := gin.Default()
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
+
+    router := gin.New()
+	router.Use(gin.Logger())
     router.GET("/albums", getAlbums)
 	router.GET("/albums/:id", getAlbumByID)
 	router.POST("/albums", postAlbums)
 
-    router.Run("localhost:8080")
+    router.Run(":" + port)
 }
 
 func getAlbums(c *gin.Context) {
