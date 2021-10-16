@@ -30,11 +30,19 @@ func main() {
 
     router := gin.New()
 	router.Use(gin.Logger())
+	// Health check
+	router.GET("/health-check", healthCheck)
+
+	// Albums
     router.GET("/albums", getAlbums)
 	router.GET("/albums/:id", getAlbumByID)
 	router.POST("/albums", postAlbums)
 
     router.Run(":" + port)
+}
+
+func healthCheck(c *gin.Context) {
+	c.IndentedJSON(http.StatusOK, "it_works")
 }
 
 func getAlbums(c *gin.Context) {
